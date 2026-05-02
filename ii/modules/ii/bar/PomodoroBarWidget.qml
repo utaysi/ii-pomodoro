@@ -55,7 +55,7 @@ Item {
             TextMetrics {
                 id: badgeMetrics
                 font: badgeText.font
-                text: "00:00"
+                text: "+00:00"
             }
         }
     }

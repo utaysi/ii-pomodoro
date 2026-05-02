@@ -21,6 +21,8 @@ Singleton {
     property int _activeDuration: focusDuration
     property int _startTimestamp: 0
     property int _elapsedAtPause: 0
+    property int _alertTimestamp: 0
+    property int alertOverflow: 0
     property bool alertFlash: false
 
     readonly property color displayColor: {
@@ -47,7 +49,11 @@ Singleton {
 
     readonly property string displayText: {
         if (state === "idle") return "POMO"
-        if (state === "alert_pomodoro" || state === "alert_break") return "00:00"
+        if (state === "alert_pomodoro" || state === "alert_break") {
+            var m = Math.floor(alertOverflow / 60).toString().padStart(2, '0')
+            var s = Math.floor(alertOverflow % 60).toString().padStart(2, '0')
+            return "+" + m + ":" + s
+        }
         var m = Math.floor(secondsLeft / 60).toString().padStart(2, '0')
         var s = Math.floor(secondsLeft % 60).toString().padStart(2, '0')
         return m + ":" + s
@@ -84,13 +90,23 @@ Singleton {
         onTriggered: root.alertFlash = !root.alertFlash
     }
 
+    Timer {
+        id: alertTickTimer
+        interval: 1000
+        repeat: true
+        running: root.isAlerting
+        onTriggered: root.alertOverflow = root._now() - root._alertTimestamp
+    }
+
     function _tick() {
         var elapsed = _now() - _startTimestamp
         secondsLeft = Math.max(0, _activeDuration - elapsed)
         if (secondsLeft <= 0) {
             if (state === "running_pomodoro") {
+                _alertTimestamp = _now()
                 state = "alert_pomodoro"
             } else {
+                _alertTimestamp = _now()
                 state = "alert_break"
             }
             secondsLeft = 0
@@ -186,7 +202,9 @@ Singleton {
     function _stopAlerts() {
         alertSoundTimer.stop()
         alertFlashTimer.stop()
+        alertTickTimer.stop()
         alertFlash = false
+        alertOverflow = 0
     }
 
     onFocusDurationChanged: {
