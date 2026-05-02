@@ -30,7 +30,7 @@ Item {
     Rectangle {
         id: badge
         anchors.centerIn: parent
-        width: badgeText.implicitWidth + 12
+        width: badgeMetrics.width + 12
         height: badgeText.implicitHeight + 6
         radius: Appearance.rounding.unsharpen
         color: root.menuOpen ? "#FFFFFF" : PomodoroBarService.displayColor
@@ -51,6 +51,12 @@ Item {
             font.family: Appearance.font.family.numbers
             font.variableAxes: Appearance.font.variableAxes.numbers
             color: root.menuOpen ? "#000000" : PomodoroBarService.displayTextColor
+
+            TextMetrics {
+                id: badgeMetrics
+                font: badgeText.font
+                text: "00:00"
+            }
         }
     }
 
