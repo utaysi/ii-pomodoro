@@ -122,7 +122,12 @@ Singleton {
         }
     }
 
+    function _playClickSound() {
+        Quickshell.execDetached(["ffplay", "-nodisp", "-autoexit", "-hide_banner", "-loglevel", "quiet", Quickshell.shellPath("assets/sounds/thock.ogg")])
+    }
+
     function handleClick() {
+        _playClickSound()
         switch (state) {
         case "idle":
             _startPomodoro()
