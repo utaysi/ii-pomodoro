@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
+import Quickshell.Wayland
 
 Item {
     id: root
@@ -80,24 +81,33 @@ Item {
         id: menuLoader
         active: root.menuOpen
 
-        sourceComponent: PopupWindow {
+        sourceComponent: PanelWindow {
             id: pomoMenu
 
             color: "transparent"
-            visible: true
 
-            implicitWidth: menuLayout.implicitWidth + 24
-            implicitHeight: menuLayout.implicitHeight + 24
+            anchors.left: !Config.options.bar.vertical || (Config.options.bar.vertical && !Config.options.bar.bottom)
+            anchors.right: Config.options.bar.vertical && Config.options.bar.bottom
+            anchors.top: Config.options.bar.vertical || (!Config.options.bar.vertical && !Config.options.bar.bottom)
+            anchors.bottom: !Config.options.bar.vertical && Config.options.bar.bottom
 
-            anchor {
-                window: root.QsWindow.window
-                rect.x: root.mapToItem(null, 0, 0).x
-                rect.y: root.mapToItem(null, 0, 0).y + (Config.options.bar.bottom ? 0 : root.height)
-                rect.width: root.width
-                rect.height: root.height
-                edges: Config.options.bar.bottom ? Edges.Top : Edges.Bottom
-                gravity: Config.options.bar.bottom ? Edges.Top : Edges.Bottom
-                adjustment: PopupAdjustment.ResizeY | PopupAdjustment.SlideX
+            exclusionMode: ExclusionMode.Ignore
+            exclusiveZone: 0
+            WlrLayershell.namespace: "quickshell:popup"
+            WlrLayershell.layer: WlrLayer.Overlay
+
+            implicitWidth: menuBackground.implicitWidth + Appearance.sizes.elevationMargin * 2
+            implicitHeight: menuBackground.implicitHeight + Appearance.sizes.elevationMargin * 2
+
+            margins {
+                left: root.QsWindow?.mapFromItem(badge, 0, 0).x - (menuBackground.implicitWidth - badge.width) / 2 - Appearance.sizes.elevationMargin
+                top: Config.options.bar.bottom ? undefined : Appearance.sizes.barHeight
+                bottom: Config.options.bar.bottom ? Appearance.sizes.barHeight : undefined
+                right: Appearance.sizes.verticalBarWidth
+            }
+
+            mask: Region {
+                item: menuBackground
             }
 
             HyprlandFocusGrab {
@@ -112,17 +122,25 @@ Item {
 
             Rectangle {
                 id: menuBackground
+                readonly property real margin: 12
+                anchors {
+                    fill: parent
+                    leftMargin: Appearance.sizes.elevationMargin
+                    rightMargin: Appearance.sizes.elevationMargin
+                    topMargin: Appearance.sizes.elevationMargin
+                    bottomMargin: Appearance.sizes.elevationMargin
+                }
+                implicitWidth: menuLayout.implicitWidth + margin * 2
+                implicitHeight: menuLayout.implicitHeight + margin * 2
                 color: Appearance.m3colors.m3surfaceContainer
                 radius: Appearance.rounding.small
                 border.width: 1
                 border.color: Appearance.colors.colLayer0Border
-                width: menuLayout.implicitWidth + 24
-                height: menuLayout.implicitHeight + 24
 
                 ColumnLayout {
                     id: menuLayout
                     anchors.fill: parent
-                    anchors.margins: 12
+                    anchors.margins: menuBackground.margin
                     spacing: 8
 
                     RowLayout {
