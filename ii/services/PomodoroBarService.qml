@@ -108,9 +108,9 @@ Singleton {
 
     function _playAlertSound() {
         if (state === "alert_pomodoro" && !mutePomodoroSound) {
-            Audio.playSystemSound("alarm-clock-elapsed")
-        } else if (state === "alert_break" && !muteBreakSound) {
             Audio.playSystemSound("complete")
+        } else if (state === "alert_break" && !muteBreakSound) {
+            Audio.playSystemSound("alarm-clock-elapsed")
         }
     }
 
