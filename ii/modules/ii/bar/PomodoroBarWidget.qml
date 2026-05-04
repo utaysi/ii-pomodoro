@@ -33,7 +33,7 @@ Item {
         width: badgeMetrics.width + 22
         height: badgeText.implicitHeight + 6
         radius: Appearance.rounding.full
-        color: root.menuOpen ? Appearance.colors.colPrimary : Appearance.colors.colSurfaceContainer
+        color: root.menuOpen ? Appearance.colors.colPrimary : "transparent"
 
         Behavior on color { ColorAnimation { duration: 200 } }
 
