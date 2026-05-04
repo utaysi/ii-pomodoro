@@ -34,7 +34,11 @@ Item {
         width: badgeMetrics.width + 22
         height: badgeText.implicitHeight + 6
         radius: Appearance.rounding.full
-        color: root.menuOpen ? Appearance.colors.colPrimary : "transparent"
+        color: {
+            if (root.menuOpen) return Appearance.colors.colPrimary
+            if (PomodoroBarService.isAlerting) return PomodoroBarService.alertFlash ? Appearance.colors.colPrimary : "transparent"
+            return "transparent"
+        }
 
         Behavior on color { ColorAnimation { duration: 200 } }
 
