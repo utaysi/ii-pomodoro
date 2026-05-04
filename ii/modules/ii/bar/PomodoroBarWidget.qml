@@ -112,7 +112,7 @@ Item {
 
             Rectangle {
                 id: menuBackground
-                color: Appearance.colors.colLayer0
+                color: Appearance.m3colors.m3surfaceContainer
                 radius: Appearance.rounding.small
                 border.width: 1
                 border.color: Appearance.colors.colLayer0Border
@@ -132,20 +132,20 @@ Item {
                         MaterialSymbol {
                             iconSize: Appearance.font.pixelSize.larger
                             text: "timer"
-                            color: Appearance.colors.colOnLayer0
+                            color: PomodoroBarService.dotColor
                         }
 
                         StyledText {
                             text: Translation.tr("Pomodoro")
                             font.pixelSize: Appearance.font.pixelSize.large
-                            color: Appearance.colors.colOnLayer0
+                            color: Appearance.colors.colOnSurfaceVariant
                             Layout.fillWidth: true
                         }
 
                         StyledText {
                             text: PomodoroBarService.state.replace("_", " ")
                             font.pixelSize: Appearance.font.pixelSize.small
-                            color: Appearance.colors.colSubtext
+                            color: PomodoroBarService.dotColor
                         }
                     }
 
@@ -162,7 +162,7 @@ Item {
                         StyledText {
                             text: Translation.tr("Focus") + ":"
                             font.pixelSize: Appearance.font.pixelSize.normal
-                            color: Appearance.colors.colOnLayer0
+                            color: Appearance.colors.colOnSurfaceVariant
                         }
 
                         StyledSpinBox {
@@ -187,7 +187,7 @@ Item {
                         StyledText {
                             text: Translation.tr("Break") + ":"
                             font.pixelSize: Appearance.font.pixelSize.normal
-                            color: Appearance.colors.colOnLayer0
+                            color: Appearance.colors.colOnSurfaceVariant
                         }
 
                         StyledSpinBox {
@@ -233,7 +233,7 @@ Item {
                         StyledText {
                             text: Translation.tr("Mute sounds")
                             font.pixelSize: Appearance.font.pixelSize.normal
-                            color: Appearance.colors.colOnLayer0
+                            color: Appearance.colors.colOnSurfaceVariant
                             Layout.fillWidth: true
                         }
 
@@ -254,15 +254,25 @@ Item {
                         Layout.fillWidth: true
                         implicitHeight: 32
                         buttonRadius: Appearance.rounding.unsharpen
-                        colBackground: Appearance.colors.colErrorContainer
-                        colBackgroundHover: Appearance.colors.colErrorContainerHover
-                        colRipple: Appearance.colors.colErrorContainerActive
+                        colBackground: Appearance.colors.colSurfaceContainerHighest
+                        colBackgroundHover: Appearance.colors.colSurfaceContainerHighestHover
+                        colRipple: Appearance.colors.colSurfaceContainerHighestActive
                         downAction: () => { PomodoroBarService.reset(); root.menuOpen = false }
-                        contentItem: StyledText {
+                        contentItem: Row {
+                            spacing: 4
                             anchors.centerIn: parent
-                            text: Translation.tr("Reset")
-                            font.pixelSize: Appearance.font.pixelSize.small
-                            color: Appearance.colors.colOnErrorContainer
+                            MaterialSymbol {
+                                text: "delete_outline"
+                                iconSize: Appearance.font.pixelSize.normal
+                                color: Appearance.colors.colError
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                            StyledText {
+                                text: Translation.tr("Reset")
+                                font.pixelSize: Appearance.font.pixelSize.small
+                                color: Appearance.colors.colOnSurface
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
                         }
                     }
                 }
