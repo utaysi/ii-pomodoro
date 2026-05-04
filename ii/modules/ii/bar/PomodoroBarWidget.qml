@@ -30,32 +30,48 @@ Item {
     Rectangle {
         id: badge
         anchors.centerIn: parent
-        width: badgeMetrics.width + 12
+        width: badgeMetrics.width + 22
         height: badgeText.implicitHeight + 6
-        radius: Appearance.rounding.unsharpen
-        color: root.menuOpen ? "#FFFFFF" : PomodoroBarService.displayColor
-        opacity: {
-            if (PomodoroBarService.isAlerting) return PomodoroBarService.alertFlash ? 1.0 : 0.4
-            if (PomodoroBarService.isPaused) return 0.7
-            return 1.0
-        }
+        radius: Appearance.rounding.full
+        color: root.menuOpen ? Appearance.colors.colPrimary : Appearance.colors.colSurfaceContainer
 
         Behavior on color { ColorAnimation { duration: 200 } }
-        Behavior on opacity { NumberAnimation { duration: 150 } }
 
-        StyledText {
-            id: badgeText
+        Row {
+            id: badgeRow
             anchors.centerIn: parent
-            text: PomodoroBarService.displayText
-            font.pixelSize: Appearance.font.pixelSize.normal
-            font.family: Appearance.font.family.numbers
-            font.variableAxes: Appearance.font.variableAxes.numbers
-            color: root.menuOpen ? "#000000" : PomodoroBarService.displayTextColor
+            spacing: 4
 
-            TextMetrics {
-                id: badgeMetrics
-                font: badgeText.font
-                text: "+00:00"
+            Rectangle {
+                width: 6
+                height: 6
+                radius: Appearance.rounding.full
+                color: PomodoroBarService.dotColor
+                opacity: {
+                    if (PomodoroBarService.state === "idle") return 0
+                    if (PomodoroBarService.isAlerting) return PomodoroBarService.alertFlash ? 1.0 : 0.4
+                    if (PomodoroBarService.isPaused) return 0.7
+                    return 1.0
+                }
+                anchors.verticalCenter: parent.verticalCenter
+
+                Behavior on opacity { NumberAnimation { duration: 150 } }
+                Behavior on color { ColorAnimation { duration: 200 } }
+            }
+
+            StyledText {
+                id: badgeText
+                text: PomodoroBarService.displayText
+                font.pixelSize: Appearance.font.pixelSize.normal
+                font.family: Appearance.font.family.numbers
+                font.variableAxes: Appearance.font.variableAxes.numbers
+                color: root.menuOpen ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSurface
+
+                TextMetrics {
+                    id: badgeMetrics
+                    font: badgeText.font
+                    text: "+00:00"
+                }
             }
         }
     }

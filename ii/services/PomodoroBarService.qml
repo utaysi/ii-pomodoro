@@ -25,25 +25,14 @@ Singleton {
     property int alertOverflow: 0
     property bool alertFlash: false
 
-    readonly property color displayColor: {
+    readonly property color dotColor: {
         switch (state) {
-        case "idle": return "#E53935"
+        case "idle": return Appearance.colors.colPrimary
         case "running_pomodoro": case "paused_pomodoro":
         case "alert_pomodoro": case "ready_pomodoro": return "#43A047"
         case "running_break": case "paused_break":
         case "alert_break": case "ready_break": return "#FFB300"
-        default: return "#E53935"
-        }
-    }
-
-    readonly property color displayTextColor: {
-        switch (state) {
-        case "idle": return "#FFFFFF"
-        case "running_pomodoro": case "paused_pomodoro":
-        case "alert_pomodoro": case "ready_pomodoro": return "#FFFFFF"
-        case "running_break": case "paused_break":
-        case "alert_break": case "ready_break": return "#1A1A2E"
-        default: return "#FFFFFF"
+        default: return Appearance.colors.colPrimary
         }
     }
 
