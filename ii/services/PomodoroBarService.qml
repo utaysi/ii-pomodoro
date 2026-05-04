@@ -2,6 +2,7 @@ pragma Singleton
 pragma ComponentBehavior: Bound
 
 import qs.modules.common
+import qs.modules.common.functions
 import qs.services
 import Quickshell
 import QtQuick
@@ -62,6 +63,48 @@ Singleton {
     readonly property bool isAlerting: state === "alert_pomodoro" || state === "alert_break"
     readonly property bool isRunning: state === "running_pomodoro" || state === "running_break"
     readonly property bool isReady: state === "ready_pomodoro" || state === "ready_break"
+
+    readonly property string obsFilePath: FileUtils.trimFileProtocol(Quickshell.shellPath("assets/pomodoro/obs-timer.txt"))
+
+    readonly property string obsText: {
+        if (state === "idle") return ""
+        var m = Math.floor(secondsLeft / 60).toString().padStart(2, '0')
+        var s = Math.floor(secondsLeft % 60).toString().padStart(2, '0')
+        var timeStr = m + ":" + s
+        if (isRunning) {
+            if (state === "running_break") return "Break:    " + timeStr
+            return "Focus:    " + timeStr
+        }
+        if (isAlerting) {
+            var am = Math.floor(alertOverflow / 60).toString().padStart(2, '0')
+            var as2 = Math.floor(alertOverflow % 60).toString().padStart(2, '0')
+            return "Over:   +" + am + ":" + as2
+        }
+        if (isPaused) return "Paused: " + timeStr
+        if (isReady) {
+            if (state === "ready_break") return "Break:    " + timeStr
+            return "Focus:    " + timeStr
+        }
+        return timeStr
+    }
+
+    function writeObsFile() {
+        Quickshell.execDetached(["bash", "-c", "printf '%s' '" + obsText + "' > '" + obsFilePath + ".tmp' && mv '" + obsFilePath + ".tmp' '" + obsFilePath + "'"])
+    }
+
+    onObsTextChanged: {
+        if (!obsThrottle.running) {
+            writeObsFile()
+            obsThrottle.start()
+        }
+    }
+    Component.onCompleted: writeObsFile()
+
+    Timer {
+        id: obsThrottle
+        interval: 900
+        onTriggered: root.writeObsFile()
+    }
 
     function _now() { return Math.floor(Date.now() / 1000) }
 

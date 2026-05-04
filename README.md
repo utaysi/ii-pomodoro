@@ -1,6 +1,6 @@
 # Illogical Impulse Pomodoro
 
-A Pomodoro timer widget for the [Illogical Impulse](https://github.com/end-4/dots-hyprland) Quickshell bar, with configurable focus/break durations, pause-resume, sound alerts, and a right-click popup menu.
+A Pomodoro timer widget for the [Illogical Impulse](https://github.com/end-4/dots-hyprland) Quickshell bar, with configurable focus/break durations, pause-resume, sound alerts, OBS streaming output, and a right-click popup menu.
 
 <table align="center">
   <tr>
@@ -75,3 +75,13 @@ Values are in seconds (`1500` = 25 min, `300` = 5 min).
 | Mute break sound | Popup → **Mute break sound** toggle | Silences the break-completion alert |
 
 When a timer ends, the badge flashes and plays a sound. Overflow time displays as `+MM:SS` so you can see how long you've been past the timer.
+
+## OBS Integration
+
+The timer writes its current state to a text file for use as an OBS text source. The file is located at:
+
+```
+ii/assets/pomodoro/obs-timer.txt
+```
+
+In OBS, add a **Text (GDI+)** source, check **Read from file**, and point it to the above path. The output format is `Mode: MM:SS` (e.g. `Focus: 24:30`, `Break: 04:55`, `Paused: 12:00`).
