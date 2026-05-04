@@ -71,8 +71,7 @@ Values are in seconds (`1500` = 25 min, `300` = 5 min).
 | Reset | Popup → **Reset** button | Returns to idle state |
 | Adjust focus duration | Popup → **Focus** spinbox | Sets focus length (1–120 min) |
 | Adjust break duration | Popup → **Break** spinbox | Sets break length (1–60 min) |
-| Mute focus sound | Popup → **Mute focus sound** toggle | Silences the focus-completion alert |
-| Mute break sound | Popup → **Mute break sound** toggle | Silences the break-completion alert |
+| Mute sounds | Popup → **Mute sounds** toggle | Silences all alert sounds (focus and break) |
 
 When a timer ends, the badge flashes and plays a sound. Overflow time displays as `+MM:SS` so you can see how long you've been past the timer.
 
