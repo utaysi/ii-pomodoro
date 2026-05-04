@@ -64,46 +64,56 @@ Singleton {
     readonly property bool isRunning: state === "running_pomodoro" || state === "running_break"
     readonly property bool isReady: state === "ready_pomodoro" || state === "ready_break"
 
-    readonly property string obsFilePath: FileUtils.trimFileProtocol(Quickshell.shellPath("assets/pomodoro/obs-timer.txt"))
+    readonly property string obsStateFilePath: FileUtils.trimFileProtocol(Quickshell.shellPath("assets/pomodoro/obs-timer-state.txt"))
+    readonly property string obsRemainingFilePath: FileUtils.trimFileProtocol(Quickshell.shellPath("assets/pomodoro/obs-timer-remaining.txt"))
 
-    readonly property string obsText: {
+    readonly property string obsStateText: {
         if (state === "idle") return ""
-        var m = Math.floor(secondsLeft / 60).toString().padStart(2, '0')
-        var s = Math.floor(secondsLeft % 60).toString().padStart(2, '0')
-        var timeStr = m + ":" + s
         if (isRunning) {
-            if (state === "running_break") return "Break:    " + timeStr
-            return "Focus:    " + timeStr
+            return state === "running_break" ? "Break:" : "Focus:"
         }
+        if (isAlerting) return "Over:"
+        if (isPaused) return "Paused:"
+        if (isReady) {
+            return state === "ready_break" ? "Break:" : "Focus:"
+        }
+        return ""
+    }
+
+    readonly property string obsRemainingText: {
+        if (state === "idle") return ""
         if (isAlerting) {
             var am = Math.floor(alertOverflow / 60).toString().padStart(2, '0')
             var as2 = Math.floor(alertOverflow % 60).toString().padStart(2, '0')
-            return "Over:   +" + am + ":" + as2
+            return "+" + am + ":" + as2
         }
-        if (isPaused) return "Paused: " + timeStr
-        if (isReady) {
-            if (state === "ready_break") return "Break:    " + timeStr
-            return "Focus:    " + timeStr
-        }
-        return timeStr
+        var m = Math.floor(secondsLeft / 60).toString().padStart(2, '0')
+        var s = Math.floor(secondsLeft % 60).toString().padStart(2, '0')
+        return m + ":" + s
     }
 
-    function writeObsFile() {
-        Quickshell.execDetached(["bash", "-c", "printf '%s' '" + obsText + "' > '" + obsFilePath + ".tmp' && mv '" + obsFilePath + ".tmp' '" + obsFilePath + "'"])
+    function writeObsFiles() {
+        Quickshell.execDetached(["bash", "-c", "printf '%s' '" + obsStateText + "' > '" + obsStateFilePath + ".tmp' && mv '" + obsStateFilePath + ".tmp' '" + obsStateFilePath + "' && printf '%s' '" + obsRemainingText + "' > '" + obsRemainingFilePath + ".tmp' && mv '" + obsRemainingFilePath + ".tmp' '" + obsRemainingFilePath + "'"])
     }
 
-    onObsTextChanged: {
+    onObsStateTextChanged: {
         if (!obsThrottle.running) {
-            writeObsFile()
+            writeObsFiles()
             obsThrottle.start()
         }
     }
-    Component.onCompleted: writeObsFile()
+    onObsRemainingTextChanged: {
+        if (!obsThrottle.running) {
+            writeObsFiles()
+            obsThrottle.start()
+        }
+    }
+    Component.onCompleted: writeObsFiles()
 
     Timer {
         id: obsThrottle
         interval: 900
-        onTriggered: root.writeObsFile()
+        onTriggered: root.writeObsFiles()
     }
 
     function _now() { return Math.floor(Date.now() / 1000) }
