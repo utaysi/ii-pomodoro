@@ -75,14 +75,6 @@ Singleton {
     }
 
     Timer {
-        id: alertSoundTimer
-        interval: 8000
-        repeat: true
-        running: root.isAlerting
-        onTriggered: root._playAlertSound()
-    }
-
-    Timer {
         id: alertFlashTimer
         interval: 500
         repeat: true
@@ -205,7 +197,7 @@ Singleton {
     }
 
     function _stopAlerts() {
-        alertSoundTimer.stop()
+        
         alertFlashTimer.stop()
         alertTickTimer.stop()
         alertFlash = false
