@@ -12,8 +12,7 @@ Singleton {
     property int focusDuration: Config.options.time.pomodoro.focus
     property int breakDuration: Config.options.time.pomodoro.breakTime
 
-    property bool mutePomodoroSound: false
-    property bool muteBreakSound: false
+    property bool muteSound: false
 
     property string state: "idle"
 
@@ -107,9 +106,10 @@ Singleton {
     }
 
     function _playAlertSound() {
-        if (state === "alert_pomodoro" && !mutePomodoroSound) {
+        if (muteSound) return
+        if (state === "alert_pomodoro") {
             Audio.playSystemSound("complete")
-        } else if (state === "alert_break" && !muteBreakSound) {
+        } else if (state === "alert_break") {
             Audio.playSystemSound("alarm-clock-elapsed")
         }
     }

@@ -215,7 +215,7 @@ Item {
                         Layout.fillWidth: true
 
                         StyledText {
-                            text: Translation.tr("Mute focus sound")
+                            text: Translation.tr("Mute sounds")
                             font.pixelSize: Appearance.font.pixelSize.normal
                             color: Appearance.colors.colOnLayer0
                             Layout.fillWidth: true
@@ -223,25 +223,8 @@ Item {
 
                         StyledSwitch {
                             scale: 0.85
-                            checked: PomodoroBarService.mutePomodoroSound
-                            onToggled: PomodoroBarService.mutePomodoroSound = checked
-                        }
-                    }
-
-                    RowLayout {
-                        Layout.fillWidth: true
-
-                        StyledText {
-                            text: Translation.tr("Mute break sound")
-                            font.pixelSize: Appearance.font.pixelSize.normal
-                            color: Appearance.colors.colOnLayer0
-                            Layout.fillWidth: true
-                        }
-
-                        StyledSwitch {
-                            scale: 0.85
-                            checked: PomodoroBarService.muteBreakSound
-                            onToggled: PomodoroBarService.muteBreakSound = checked
+                            checked: PomodoroBarService.muteSound
+                            onToggled: PomodoroBarService.muteSound = checked
                         }
                     }
 
