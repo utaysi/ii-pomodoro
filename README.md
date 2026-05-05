@@ -77,10 +77,18 @@ When a timer ends, the badge flashes and plays a sound. Overflow time displays a
 
 ## OBS Integration
 
-The timer writes its current state to a text file for use as an OBS text source. The file is located at:
+The timer writes its state to two separate text files for use as OBS text sources, allowing independent styling of the state label and time remaining:
 
 ```
-ii/assets/pomodoro/obs-timer.txt
+ii/assets/pomodoro/obs-timer-state.txt
+ii/assets/pomodoro/obs-timer-remaining.txt
 ```
 
-In OBS, add a **Text (GDI+)** source, check **Read from file**, and point it to the above path. The output format is `Mode: MM:SS` (e.g. `Focus: 24:30`, `Break: 04:55`, `Paused: 12:00`).
+In OBS, add two **Text (GDI+)** sources, check **Read from file** on each, and point them to the respective paths.
+
+| File | Output examples |
+|------|-----------------|
+| `obs-timer-state.txt` | `Focus:`, `Break:`, `Paused:`, `Over:` |
+| `obs-timer-remaining.txt` | `24:30`, `04:55`, `+03:27` |
+
+Both files are empty when the timer is idle.
