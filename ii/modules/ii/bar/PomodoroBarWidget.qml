@@ -31,8 +31,10 @@ Item {
     Rectangle {
         id: badge
         anchors.centerIn: parent
-        width: badgeMetrics.width + 22
-        height: badgeText.implicitHeight + 6
+        width: (PomodoroBarService.state === "idle")
+            ? idleIcon.implicitWidth + 6
+            : badgeMetrics.width + 22
+        height: Math.max(badgeText.implicitHeight, idleIcon.implicitHeight) + 6
         radius: Appearance.rounding.full
         color: {
             if (root.menuOpen) return Appearance.colors.colPrimary
@@ -41,11 +43,22 @@ Item {
         }
 
         Behavior on color { ColorAnimation { duration: 200 } }
+        Behavior on width { NumberAnimation { duration: 150 } }
+
+        MaterialSymbol {
+            id: idleIcon
+            visible: PomodoroBarService.state === "idle"
+            anchors.centerIn: parent
+            text: "timer"
+            iconSize: Appearance.font.pixelSize.larger
+            color: root.menuOpen ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSurface
+        }
 
         Row {
             id: badgeRow
             anchors.centerIn: parent
             spacing: 4
+            visible: PomodoroBarService.state !== "idle"
 
             Rectangle {
                 width: 6
@@ -53,7 +66,6 @@ Item {
                 radius: Appearance.rounding.full
                 color: PomodoroBarService.dotColor
                 opacity: {
-                    if (PomodoroBarService.state === "idle") return 0
                     if (PomodoroBarService.isAlerting) return PomodoroBarService.alertFlash ? 1.0 : 0.4
                     if (PomodoroBarService.isPaused) return 0.7
                     return 1.0
@@ -285,7 +297,7 @@ Item {
                             anchors.centerIn: parent
                             MaterialSymbol {
                                 text: "delete_outline"
-                                iconSize: Appearance.font.pixelSize.normal
+iconSize: Appearance.font.pixelSize.large
                                 color: Appearance.colors.colError
                                 anchors.verticalCenter: parent.verticalCenter
                             }

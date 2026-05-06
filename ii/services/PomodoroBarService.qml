@@ -37,7 +37,7 @@ Singleton {
     }
 
     readonly property string displayText: {
-        if (state === "idle") return "POMO"
+        if (state === "idle") return ""
         if (state === "alert_pomodoro" || state === "alert_break") {
             var m = Math.floor(alertOverflow / 60).toString().padStart(2, '0')
             var s = Math.floor(alertOverflow % 60).toString().padStart(2, '0')
